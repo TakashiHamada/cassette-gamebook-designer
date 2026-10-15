@@ -127,6 +127,13 @@
 .card-back {
   border: 0.3cqw solid var(--card-rule);
 }
+/* 右・左の列の幅（--back-*-width）は文字を並べる中身の幅として扱う。
+   ページ側の「* { box-sizing: border-box }」の有無で余白・罫線のぶん中身が狭まらないよう、ここで固定する */
+.back-sources,
+.back-reading,
+.back-choices {
+  box-sizing: content-box;
+}
 .back-inner {
   position: absolute;
   inset: 0;
