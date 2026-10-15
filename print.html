@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>印刷 | カセット・ゲームブック デザイナー</title>
+  <link rel="stylesheet" href="css/card.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <header class="print-controls">
+    <h1>印刷用レイアウト</h1>
+    <label>印刷する面
+      <select id="opt-mode">
+        <option value="both">表面と裏面（交互に並べる）</option>
+        <option value="front">表面のみ</option>
+        <option value="back">裏面のみ</option>
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="opt-mirror" checked>
+      裏面を左右反転して配置（両面印刷で表裏を合わせる）
+    </label>
+    <button type="button" id="btn-print">印刷する</button>
+    <a href="index.html">← 編集画面へ戻る</a>
+    <p id="print-note" class="print-note"></p>
+  </header>
+  <main id="sheets"></main>
+  <script type="module" src="js/print.js"></script>
+</body>
+</html>

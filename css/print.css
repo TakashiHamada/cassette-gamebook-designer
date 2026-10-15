@@ -1,0 +1,70 @@
+/* 印刷ページ。用紙サイズ・面付けは js/config.js の PRINT_LAYOUT / CARD_SIZE_MM から js/print.js が反映する。 */
+body {
+  margin: 0;
+  background: #dcd6c8;
+  font-family: system-ui, -apple-system, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  color: #2a2420;
+}
+
+.print-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  padding: 10px 16px;
+  background: #fffdf7;
+  border-bottom: 1px solid #d4c8b0;
+}
+.print-controls h1 { margin: 0; font-size: 18px; }
+.print-controls button {
+  padding: 6px 16px;
+  border: 1px solid #2f6fdb;
+  border-radius: 6px;
+  background: #2f6fdb;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.print-note { flex-basis: 100%; margin: 0; font-size: 13px; color: #7a6f5d; }
+.print-note.is-error { color: #c0392b; font-weight: 700; }
+
+#sheets { padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+.sheet {
+  position: relative;
+  display: grid;
+  place-content: center;
+  grid-template-columns: repeat(var(--print-columns), var(--card-width-mm));
+  grid-auto-rows: var(--card-height-mm);
+  width: var(--page-width-mm);
+  height: var(--page-height-mm);
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  break-after: page;
+  page-break-after: always;
+}
+.sheet-caption {
+  position: absolute;
+  top: 3mm;
+  left: 5mm;
+  font-size: 9pt;
+  color: #888;
+}
+
+.slot {
+  width: var(--card-width-mm);
+  height: var(--card-height-mm);
+  box-shadow: 0 0 0 0.1mm #999; /* 切り取り用ガイド線 */
+}
+.slot .card {
+  height: 100%;
+  border-radius: 0;
+}
+
+@media print {
+  body { background: #fff; }
+  .print-controls, .sheet-caption { display: none; }
+  #sheets { display: block; padding: 0; }
+  .sheet { margin: 0; box-shadow: none; }
+  .sheet:last-child { break-after: auto; page-break-after: auto; }
+}

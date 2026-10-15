@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>カセット・ゲームブック デザイナー</title>
+  <link rel="stylesheet" href="css/card.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header__row">
+      <h1 class="app-title">📼 カセット・ゲームブック</h1>
+      <label class="title-field">ゲーム名
+        <input type="text" id="game-title" maxlength="60">
+      </label>
+      <span id="save-status" class="save-status" role="status" aria-live="polite"></span>
+    </div>
+    <div class="app-header__row">
+      <nav class="tabs" aria-label="画面切り替え">
+        <button type="button" class="tab" data-tab="edit">編集</button>
+        <button type="button" class="tab" data-tab="validate">整合性チェック <span id="issue-badge" class="badge" hidden></span></button>
+        <button type="button" class="tab" data-tab="flow">フローチャート</button>
+      </nav>
+      <div class="actions">
+        <button type="button" id="btn-play" class="btn btn-primary">▶ 1番からプレイ</button>
+        <button type="button" id="btn-play-here" class="btn">表示中のカードからプレイ</button>
+        <button type="button" id="btn-resume" class="btn" hidden>続きからプレイ</button>
+        <button type="button" id="btn-export" class="btn">JSON書き出し</button>
+        <button type="button" id="btn-import" class="btn">JSON読み込み</button>
+        <a class="btn" href="print.html" target="_blank" rel="noopener">印刷ページ</a>
+        <button type="button" id="btn-default" class="btn">デフォルト</button>
+        <button type="button" id="btn-clear" class="btn btn-danger">リセット</button>
+      </div>
+    </div>
+    <p id="app-message" class="app-message" role="alert" hidden></p>
+  </header>
+
+  <main class="app-main">
+    <section id="panel-edit" class="panel panel-edit" data-panel="edit">
+      <aside class="card-list" id="card-list" aria-label="カード一覧"></aside>
+      <div class="editor-form" id="editor-form"></div>
+      <div class="live-preview" id="live-preview" aria-label="カードのプレビュー"></div>
+    </section>
+
+    <section id="panel-validate" class="panel" data-panel="validate" hidden>
+      <div id="validate-view" class="validate-view"></div>
+    </section>
+
+    <section id="panel-flow" class="panel" data-panel="flow" hidden>
+      <div class="flow-toolbar">
+        <p class="flow-help">1番からの手数ごとに列を分けています。前の列へ戻る遷移は矢印を省き、ノード右上に「↩番号」で示します（ノードにマウスを乗せると表示）。破線は「番号を伏せる」選択肢です。クリックで編集へ。</p>
+        <label class="flow-option"><input type="checkbox" id="flow-show-back"> 戻る矢印もすべて表示</label>
+      </div>
+      <div id="flow-view" class="flow-view"></div>
+    </section>
+  </main>
+
+  <!-- プレイテスト（スライドショー） -->
+  <div id="play-overlay" class="play-overlay" hidden role="dialog" aria-modal="true" aria-label="プレイテスト">
+    <div class="play-bar">
+      <strong id="play-position" class="play-position"></strong>
+      <button type="button" id="play-back" class="btn">← 戻る</button>
+      <button type="button" id="play-flip" class="btn btn-primary">裏返す</button>
+      <label class="play-jump">番号へ移動
+        <input type="number" id="play-jump-input" inputmode="numeric">
+      </label>
+      <button type="button" id="play-jump" class="btn">移動</button>
+      <button type="button" id="play-restart" class="btn">最初から</button>
+      <button type="button" id="play-fullscreen" class="btn">全画面</button>
+      <button type="button" id="play-exit" class="btn">終了 (Esc)</button>
+    </div>
+    <p id="play-message" class="play-message" role="status"></p>
+    <div id="play-stage" class="play-stage"></div>
+    <form id="play-answer" class="play-answer" hidden>
+      <label id="play-answer-label">遷移先の番号を入力してください
+        <input type="number" id="play-answer-input" inputmode="numeric">
+      </label>
+      <button type="submit" class="btn btn-primary">決定</button>
+      <button type="button" id="play-answer-cancel" class="btn">キャンセル</button>
+      <span id="play-answer-hint" class="play-answer-hint"></span>
+    </form>
+    <p id="play-history" class="play-history"></p>
+  </div>
+
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

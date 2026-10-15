@@ -1,0 +1,292 @@
+/* カードの見た目（エディタ・プレイ・印刷で共有）。
+   文字サイズ・余白は cqw（カード幅の1%）単位なので、カードを拡大縮小しても比率が保たれる。
+   見た目の調整はまずこの :root の変数を触る。 */
+:root {
+  /* 寸法は js/config.js の CARD_SIZE_MM から applyCardGeometry() が上書きする */
+  --card-aspect: 100 / 70;
+  --card-aspect-num: 1.428571;
+  --card-radius: 3% / 4.2%;
+
+  /* 配色 */
+  --card-paper: #f4ecd8;
+  --card-ink: #2a2420;
+  --card-rule: #b8a888;
+  --card-muted: #8b7e6a;
+  --card-warning: #c0392b;
+
+  /* カセット絵（形状は js/card-render.js の CASSETTE_LAYOUT） */
+  --cassette-shell-top: #3a3a40;
+  --cassette-shell-bottom: #1d1d21;
+  --cassette-rim: #55555e;
+  --cassette-label: #f3ecd9;
+  --cassette-label-rule: #c2b79f;
+  --cassette-stripe-1: #c8452f;
+  --cassette-stripe-2: #e2a43a;
+  --cassette-stripe-3: #2f6f8f;
+  --cassette-badge: #2b2a29;
+  --cassette-number: #f3ecd9;
+  --cassette-window: #1b1815;
+  --cassette-window-frame: #0e0d0c;
+  --cassette-window-tick: #9a8f80;
+  --cassette-tape: #4e3628;
+  --cassette-hub-hole: #0f0d0c;
+  --cassette-hub: #ecebe6;
+  --cassette-hub-inner: #262320;
+  --cassette-bottom: #2c2c31;
+  --cassette-bottom-edge: #4a4a52;
+  --cassette-hole: #0a0a0b;
+  --cassette-tape-strip: #6a4733;
+  --cassette-guide: #d8d7d1;
+  --cassette-guide-inner: #2a2a2e;
+  --cassette-screw: #a3a3ab;
+  --cassette-screw-slot: #3a3a40;
+  --label-ink: #23306b; /* ラベルに書かれた文字（ペン書き風の紺） */
+
+  /* フォント */
+  --card-font: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif JP', serif;
+  --card-label-font: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+
+  /* 裏面 */
+  --back-padding-y: 5cqw;
+  --back-padding-x: 4cqw;
+  --back-gap: 2cqw;
+  --back-sources-width: 8cqw;
+  --back-sources-size: 3.2cqw;
+  --back-reading-width: 8.6cqw; /* 話者・読み方の欄（小さい文字で2列ぶん＋端数で溢れないための余裕） */
+  --back-reading-size: 2.5cqw;
+  --back-body-size: 3.2cqw;
+  --back-body-line-height: 1.75;
+  --back-choice-size: 3.1cqw;
+  --back-choice-width: 7cqw;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--card-aspect);
+  container-type: inline-size;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  background: var(--card-paper);
+  color: var(--card-ink);
+  font-family: var(--card-font);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ── 表面 ───────────────────────────────────── */
+.cassette-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.cassette-shell-stop-top { stop-color: var(--cassette-shell-top); }
+.cassette-shell-stop-bottom { stop-color: var(--cassette-shell-bottom); }
+.cassette-rim { fill: none; stroke: var(--cassette-rim); stroke-width: 0.35; }
+.cassette-label { fill: var(--cassette-label); }
+.cassette-label-rule { stroke: var(--cassette-label-rule); stroke-width: 0.18; }
+.cassette-stripe-1 { fill: var(--cassette-stripe-1); }
+.cassette-stripe-2 { fill: var(--cassette-stripe-2); }
+.cassette-stripe-3 { fill: var(--cassette-stripe-3); }
+.cassette-badge { fill: var(--cassette-badge); }
+.cassette-number {
+  fill: var(--cassette-number);
+  font-family: var(--card-label-font);
+  font-weight: 800;
+}
+.cassette-window { fill: var(--cassette-window); }
+.cassette-window-frame { fill: none; stroke: var(--cassette-window-frame); stroke-width: 0.5; }
+.cassette-window-tick { stroke: var(--cassette-window-tick); stroke-width: 0.25; }
+.cassette-tape { fill: var(--cassette-tape); }
+.cassette-hub-hole { fill: var(--cassette-hub-hole); }
+.cassette-hub { fill: var(--cassette-hub); }
+.cassette-hub-inner { fill: var(--cassette-hub-inner); }
+.cassette-bottom { fill: var(--cassette-bottom); stroke: var(--cassette-bottom-edge); stroke-width: 0.35; }
+.cassette-hole { fill: var(--cassette-hole); }
+.cassette-tape-strip { fill: var(--cassette-tape-strip); }
+.cassette-guide { fill: var(--cassette-guide); }
+.cassette-guide-inner { fill: var(--cassette-guide-inner); }
+.cassette-screw { fill: var(--cassette-screw); }
+.cassette-screw-slot { stroke: var(--cassette-screw-slot); stroke-width: 0.35; }
+
+/* ラベル文字。位置・文字サイズ・行の高さは記入欄の罫線に合わせて card-render.js が設定する */
+.front-label-text {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--card-label-font);
+  color: var(--label-ink);
+}
+
+/* ── 裏面 ───────────────────────────────────── */
+.card-back {
+  border: 0.3cqw solid var(--card-rule);
+}
+.back-inner {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row-reverse; /* DOM順（遷移元→本文→選択肢）を右から左へ並べる */
+  gap: var(--back-gap);
+  padding: var(--back-padding-y) var(--back-padding-x);
+}
+
+/* 右: 遷移元 */
+.back-sources {
+  flex: 0 0 var(--back-sources-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  font-size: var(--back-sources-size);
+  font-family: var(--card-label-font);
+  border-left: 0.2cqw solid var(--card-rule);
+  padding-left: calc(var(--back-gap) / 2);
+}
+.back-sources-title {
+  margin: 0 0 1cqw;
+  writing-mode: vertical-rl;
+  font-size: 0.85em;
+  font-weight: 400;
+  color: var(--card-muted);
+  letter-spacing: 0.15em;
+}
+.back-sources-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6cqw;
+}
+.back-source {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* 右: 話者と読み方のアドバイス（1項目につき1列） */
+.back-reading {
+  flex: 0 0 var(--back-reading-width);
+  min-width: 0;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--card-label-font);
+  font-size: var(--back-reading-size);
+  line-height: 1.5;
+  color: var(--card-muted);
+  border-left: 0.2cqw dotted var(--card-rule);
+  padding-left: calc(var(--back-gap) / 2);
+}
+.back-reading:empty {
+  display: none;
+}
+.back-reading p {
+  margin: 0;
+}
+.back-reading-speaker {
+  color: var(--card-ink);
+  font-weight: 700;
+}
+.back-reading-title {
+  margin-block-end: 0.6em;
+  padding: 0.15em 0;
+  border: 0.15cqw solid currentColor;
+  border-radius: 0.6cqw;
+  font-weight: 400;
+  font-size: 0.85em;
+}
+
+/* 中央: 本文（縦書き） */
+.back-body {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-combine-upright: digits 2;
+  font-size: var(--back-body-size);
+  line-height: var(--back-body-line-height);
+  letter-spacing: 0.04em;
+}
+.back-body-line {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* 左: 選択肢（1つにつき1列。--choice-count 列ぶんの幅を確保） */
+.back-choices {
+  flex: 0 0 calc(var(--choice-count, 0) * var(--back-choice-width));
+  min-width: 0;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: var(--back-choice-size);
+  line-height: 1.6;
+  border-right: 0.2cqw solid var(--card-rule);
+  padding-right: calc(var(--back-gap) / 2);
+  font-family: var(--card-label-font);
+}
+.back-choices:empty {
+  display: none;
+}
+.back-choice {
+  display: block;
+  margin: 0 0 0 calc(var(--back-choice-width) - 1.6 * var(--back-choice-size));
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  writing-mode: inherit;
+  text-align: start;
+}
+button.back-choice {
+  cursor: pointer;
+}
+.back-choice-text.is-placeholder,
+.back-choice-unset {
+  color: var(--card-muted);
+}
+.back-choice-arrow {
+  margin-block: 0.4em;
+}
+.back-choice-target {
+  font-weight: 700;
+}
+.tcy {
+  text-combine-upright: all;
+}
+
+/* 編集・プレイ時の操作要素 */
+button.back-source {
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  padding: 0 0.4cqw;
+  cursor: pointer;
+  border-bottom: 0.2cqw solid var(--card-rule);
+}
+button.back-choice:hover,
+button.back-source:hover {
+  background: rgba(0, 0, 0, 0.07);
+}
+button.back-choice:focus-visible,
+button.back-source:focus-visible {
+  outline: 0.4cqw solid #2f6fdb;
+}
+
+/* 文字がはみ出しているときの警告表示（エディタのみ） */
+.card.is-overflow {
+  outline: 0.6cqw solid var(--card-warning);
+  outline-offset: -0.6cqw;
+}
